@@ -1,7 +1,8 @@
-import React from "react";
-import { Form, Input, Button, Divider } from "antd";
+import React, {useEffect} from "react";
+import {Form, Input, Button, Divider, message} from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {LoginUser, RegisterUser} from "../../apicalls/users";
 
 const rules = [
   {
@@ -11,9 +12,28 @@ const rules = [
 ];
 
 function Login() {
-  const onFinish = (values) => {
-    console.log("Success", values);
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      const response = await LoginUser(values);
+      if (response.success) {
+        message.success(response.message);
+        localStorage.setItem("token",response.data);
+        window.location.href = "/";
+      } else {
+        throw new Error(response.message)
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("token"))
+    {
+      navigate("/");
+    }
+  },[]);
 
   return (
     <div className="h-screen bg-primary flex justify-center items-center">
@@ -27,7 +47,7 @@ function Login() {
             <Input placeholder="Email" />
           </Form.Item>
           <Form.Item label="Password" name="password" rules={rules}>
-            <Input placeholder="Password" />
+            <Input placeholder="Password" type = "password" />
           </Form.Item>
           <Button type="primary" htmlType="submit" block className="mt-2">
             Login
