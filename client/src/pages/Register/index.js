@@ -3,6 +3,8 @@ import {Form, Input, Button, Divider,message} from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {Link, useNavigate} from "react-router-dom";
 import {RegisterUser} from "../../apicalls/users";
+import {useDispatch} from "react-redux";
+import {SetLoader} from "../../redux/loaderSlice";
 
 const rules = [{
     required: true,
@@ -11,15 +13,20 @@ const rules = [{
 
 function Register() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const onFinish = async (values) => {
         try {
+            dispatch(SetLoader(true))
             const response = await RegisterUser(values);
+            dispatch(SetLoader(false))
             if (response.success) {
                 message.success(response.message);
+                navigate('/login');
             } else {
                 throw new Error(response.message)
             }
         } catch (error) {
+            dispatch(SetLoader(false))
             message.error(error.message);
         }
     };
