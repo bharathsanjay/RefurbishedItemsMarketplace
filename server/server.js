@@ -9,7 +9,7 @@ const usersRoute = require('./routes/usersRoute');
 const productsRoute = require('./routes/productsRoute');
 
 app.use('/api/users',usersRoute);
-app.use('/api/producrts',productsRoute);
+app.use('/api/products',productsRoute);
 
 app.listen(port, () => console.log(`node running on ${port}`));
 
