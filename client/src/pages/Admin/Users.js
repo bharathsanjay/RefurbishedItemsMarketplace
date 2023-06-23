@@ -76,7 +76,7 @@ function Users() {
                                                                                   "blocked")}>Block</span>)}
                     {status == "blocked" && (<span className="underline cursor-pointer"
                                                    onClick={() => onStatusUpdate(_id,
-                                                                                 "rejected")}>Unblock</span>)}
+                                                                                 "Active")}>Unblock</span>)}
 
 
                 </div>

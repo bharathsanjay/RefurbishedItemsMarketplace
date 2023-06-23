@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axiosInstance";
+import { axiosInstance } from "./axiosinstance";
 
 // add a new product
 export const AddProduct = async (payload) => {
@@ -41,9 +41,10 @@ export const DeleteProduct = async (id) => {
 };
 
 // get all products
-export const GetProducts = async () => {
+// get all products
+export const GetProducts = async (filters) => {
   try {
-    const response = await axiosInstance.get("/api/products/get-products");
+    const response = await axiosInstance.post("/api/products/get-products", filters);
     return response.data;
   } catch (error) {
     return error.message;
