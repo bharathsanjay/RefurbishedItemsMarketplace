@@ -4,17 +4,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {DeleteProduct, GetProducts, UpdateProductStatus} from "../../apicalls/products";
 import {SetLoader} from "../../redux/loaderSlice";
 import moment from 'moment'
+import {GetAllUser, UpdateUserStatus} from "../../apicalls/users";
 
-function Products() {
-    const [products, setProducts] = React.useState([]);
+function Users() {
+    const [users, setUsers] = React.useState([]);
     const dispatch = useDispatch();
     const getData = async () => {
         try {
             dispatch(SetLoader(true));
-            const response = await GetProducts();
+            const response = await GetAllUser(null);
             dispatch(SetLoader(false));
             if (response.success) {
-                setProducts(response.products);
+                setUsers(response.data);
             }
         } catch (error) {
             dispatch(SetLoader(false));
@@ -25,7 +26,7 @@ function Products() {
     const onStatusUpdate = async (id, status) => {
         try {
             dispatch(SetLoader(true));
-            const response = await UpdateProductStatus(id, status);
+            const response = await UpdateUserStatus(id, status);
             dispatch(SetLoader(false));
             if (response.success) {
                 message.success(response.message);
@@ -41,27 +42,23 @@ function Products() {
 
     const columns = [
         {
-            title: "Product",
+            title: "Name",
             dataIndex: "name",
         },
         {
-            title: "Seller",
-            dataIndex: "description",
-            render: (text, record) => {
-                return record.seller.name
-            },
+            title: "Email",
+            dataIndex: "email",
         },
         {
-            title: "Price",
-            dataIndex: "price",
+            title: "Role",
+            dataIndex: "role",
+            render: (text,record)=>{return record.role.toUpperCase();}
         },
         {
-            title: "Category",
-            dataIndex: "category",
-        },
-        {
-            title: "Age",
-            dataIndex: "age",
+            title: "Created At",
+            dataIndex: "createdAt",
+            render: (text,record)=> moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
+
         },
         {
             title: "Status",
@@ -69,29 +66,17 @@ function Products() {
             render: (text,record)=>{return record.status.toUpperCase();}
         },
         {
-            title: "Added On",
-            dataIndex: "createdAt",
-            render: (text, record) => moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
-
-        },
-        {
             title: "Action",
             dataIndex: "action",
             render: (text, record) => {
                 const {status, _id} = record;
                 return <div className="flex gap-3">
-                    {status === "pending" && (<span className="underline cursor-pointer"
-                                                    onClick={() => onStatusUpdate(_id,
-                                                                                  "approved")}>Approve</span>)}
-                    {status == "pending" && (<span className="underline cursor-pointer"
-                                                   onClick={() => onStatusUpdate(_id,
-                                                                                 "rejected")}>Reject</span>)}
-                    {status == "approved" && (<span className="underline cursor-pointer"
+                    {status === "Active" && (<span className="underline cursor-pointer"
                                                     onClick={() => onStatusUpdate(_id,
                                                                                   "blocked")}>Block</span>)}
                     {status == "blocked" && (<span className="underline cursor-pointer"
                                                    onClick={() => onStatusUpdate(_id,
-                                                                                 "approved")}>Unblock</span>)}
+                                                                                 "Active")}>Unblock</span>)}
 
 
                 </div>
@@ -107,11 +92,11 @@ function Products() {
     return (
         <div>
 
-            <Table columns={columns} dataSource={products}/>
+            <Table columns={columns} dataSource={users}/>
 
 
         </div>
     );
 }
 
-export default Products;
+export default Users;

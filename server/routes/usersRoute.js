@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require('../middlewares/authMiddleware')
+const Product = require("../models/productModel");
 // new user registration
 
 router.post('/register', async (req, res) => {
@@ -49,6 +50,11 @@ router.post('/login', async (req, res) => {
         if (!user) {
             throw new Error("User not found");
         }
+
+        //if user is active
+        if(user.status!=="Active")
+            throw new Error("The User account is blocked, please contact admin");
+
         const validPassword = await bcrypt.compare(
             req.body.password,
             user.password
@@ -92,5 +98,39 @@ router.get("/get-current-user", authMiddleware,async (req, res) => {
         )
     }
 });
+
+// get All users
+router.get("/get-users",authMiddleware,async(req,res)=>{
+    try{
+       const users = await User.find();
+       res.send({success: true,
+                message: "users fetched successfully",
+                    data: users});
+
+    }
+    catch (e) {
+        res.send(
+            {
+                sucess: false,
+                message: e.message
+            }
+        )
+    }
+})
+
+//update user status
+router.put("/update-user-status/:id",authMiddleware,async(req,res)=>{
+    try{
+        await User.findByIdAndUpdate(req.params.id,req.body);
+        res.send({success: true,
+                     message:"UserStatus updated successfully",});
+    }
+    catch (e) {
+        res.send({success: false,
+                     message: e.message,
+                 });
+    }
+
+})
 
 module.exports = router;
