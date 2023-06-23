@@ -53,9 +53,15 @@ router.delete("/delete-product/:id", authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/get-products', async(req,res) => {
+router.post('/get-products', async(req,res) => {
     try{
-        const products = await Product.find().sort({createdAt : -1});
+        const {seller,categories= [],age = []} = req.body
+        let filters = {}
+        if(seller)
+        {
+            filters.seller = seller
+        }
+        const products = await Product.find(filters).populate('seller').sort({createdAt : -1});
         res.send({
             success : true,
             products
@@ -80,7 +86,7 @@ router.post('/upload-image-to-product' , authMiddleware, multer({ storage: stora
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder : "mp"
     });
-  
+
     const productId = req.body.productId;
     await Product.findByIdAndUpdate(productId, {
       $push : {images : result.secure_url}
@@ -90,20 +96,36 @@ router.post('/upload-image-to-product' , authMiddleware, multer({ storage: stora
       message : "Image uploaded successfully",
       data : result.secure_url
     });
-  
-  
-    
+
+
+
   } catch (error) {
     console.log("route 97" + error)
     res.send({
       success: false,
       message: error.message,
     });
-    
+
   }
  } )
 
 
 
+
+//update product status
+router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
+    try{
+        const {status} = req.body;
+        await Product.findByIdAndUpdate(req.params.id,{status});
+        res.send({success: true,
+                 message:"Product Status updated successfully",});
+    }
+    catch (e) {
+        res.send({success: false,
+                 message: e.message,
+                 });
+    }
+
+})
 
 module.exports = router;

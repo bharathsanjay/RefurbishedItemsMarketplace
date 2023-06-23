@@ -50,6 +50,17 @@ export const GetProducts = async () => {
   }
 };
 
+//update product status
+export const UpdateProductStatus = async (id, status) => {
+    try {
+        const response = await
+        axiosInstance.put(`/api/products/update-product-status/${id}`, {status});
+        return response.data;
+    } catch (e) {
+        return e.message;
+    }
+}
+
 
 export const UploadProductImage = async (payload) => {
   try {

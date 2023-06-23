@@ -11,11 +11,13 @@ function Products() {
   const [products, setProducts] = React.useState([]);
   const [showProductForm, setShowProductForm] = React.useState(false);
   const dispatch = useDispatch();
-
+  const { user } = useSelector((state) => state.users);
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
-      const response = await GetProducts();
+      const response = await GetProducts({
+                                           seller: user._id,
+                                         });
       dispatch(SetLoader(false));
       if (response.success) {
         setProducts(response.products);

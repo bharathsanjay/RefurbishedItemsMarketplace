@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {message} from 'antd'
-import {axiosInstance} from "../apicalls/axiosInstance";
+import {axiosInstance} from "../apicalls/axiosinstance";
 import {GetCurrentUser} from "../apicalls/users";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -41,12 +41,18 @@ function ProctectedPage({children}) {
             <div>
                 {/* header*/}
                 <div className="flex justify-between item-center bg-primary p-5">
-                    <h1 className="text-2x1 text-white">Market Place</h1>
+                    <h1 className="text-2x1 text-white cursor-pointer" onClick={()=> navigate("/")}>Market Place</h1>
 
                 <div className="bg-white py-2 px-5 rounded flex gap-1">
                     <i className="ri-shield-user-line"></i>
-                    <span className = "underline cursor-pointer uppercase" onClick={() =>
+                    <span className = "underline cursor-pointer uppercase" onClick={() =>{
+                        if(user.role === 'user')
+                    {
                         navigate('/profile')
+                    }else{
+                        navigate('/admin')
+                    }
+                    }
                          }>
                         {user.name}
                     </span>
