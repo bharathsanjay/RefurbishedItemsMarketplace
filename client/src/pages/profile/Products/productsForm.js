@@ -5,6 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLoader } from "../../../redux/loaderSlice";
 import { AddProduct, EditProduct } from "../../../apicalls/products";
+import Images from "./Images";
 
 const additionalThings = [
   {
@@ -32,7 +33,13 @@ const rules = [
   },
 ];
 
-function ProductForm({ showProductForm, setShowProductForm, selectedProduct, getData }) {
+function ProductForm({
+  showProductForm,
+  setShowProductForm,
+  selectedProduct,
+  getData,
+}) {
+  const [selectedTab = "1", setSelectedTab] = React.useState("1");
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.users);
@@ -40,17 +47,16 @@ function ProductForm({ showProductForm, setShowProductForm, selectedProduct, get
   const onFinish = async (values) => {
     console.log(values);
     try {
-      
       dispatch(SetLoader(true));
       let response = null;
-      if(selectedProduct){
+      if (selectedProduct) {
         response = await EditProduct(selectedProduct._id, values);
-      }else{
+      } else {
         values.seller = user._id;
         values.status = "pending";
         response = await AddProduct(values);
       }
-      
+
       dispatch(SetLoader(false));
       if (response.success) {
         message.success(response.message);
@@ -83,14 +89,17 @@ function ProductForm({ showProductForm, setShowProductForm, selectedProduct, get
       onOk={() => {
         formRef.current.submit();
       }}
+      {...(selectedTab === "2" && { footer: false })}
     >
       <div>
-       <h1 className = "text-primary text-2xl text-center font-semibold uppercase">
-        {selectedProduct ? "Edit Product" : "Add Product"}
+        <h1 className="text-primary text-2xl text-center font-semibold uppercase">
+          {selectedProduct ? "Edit Product" : "Add Product"}
+        </h1>
 
-       </h1>
-
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1"
+        activeKey={selectedTab}
+        onChange={(key) => setSelectedTab(key)}
+        >
           <Tabs.TabPane tab="General" key="1">
             <Form layout="vertical" ref={formRef} onFinish={onFinish}>
               <Form.Item label="name" name="name" rules={rules}>
@@ -127,9 +136,10 @@ function ProductForm({ showProductForm, setShowProductForm, selectedProduct, get
               <div className="flex gap-10">
                 {additionalThings.map((item) => {
                   return (
-                    <Form.Item label={item.label} name={item.name}
-                    valuePropName="checked"
-                    
+                    <Form.Item
+                      label={item.label}
+                      name={item.name}
+                      valuePropName="checked"
                     >
                       <Input
                         type="checkbox"
@@ -148,8 +158,8 @@ function ProductForm({ showProductForm, setShowProductForm, selectedProduct, get
             </Form>
           </Tabs.TabPane>
 
-          <Tabs.TabPane tab="Images" key="2">
-            <h1>Images</h1>
+          <Tabs.TabPane tab="Images" key="2" disabled={!selectedProduct}>
+            <Images selectedProduct={selectedProduct} setShowProductForm={setShowProductForm} getData={getData}/>
           </Tabs.TabPane>
         </Tabs>
       </div>
