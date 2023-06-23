@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Product = require("../models/productModel");
 const authMiddleware = require('../middlewares/authMiddleware')
+const cloudinary = require("../config/cloudinaryConfig");
+const multer = require("multer");
 
 router.post('/add-product', authMiddleware, async (req, res) => {
   try {
@@ -11,6 +13,7 @@ router.post('/add-product', authMiddleware, async (req, res) => {
       message: "Product added successfully"
     });
   } catch (error) {
+    console.log(error)
     res.send({
       success: false,
       message: error.message
@@ -64,5 +67,43 @@ router.get('/get-products', async(req,res) => {
         });
     }
 });
+
+const storage = multer.diskStorage({
+  filename : function (req,file,callback) {
+    callback(null,Date.now()+ file.originalname);
+  }
+})
+
+router.post('/upload-image-to-product' , authMiddleware, multer({ storage: storage }).single("file"),
+ async(req,res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder : "mp"
+    });
+  
+    const productId = req.body.productId;
+    await Product.findByIdAndUpdate(productId, {
+      $push : {images : result.secure_url}
+    })
+    res.send({
+      success : true,
+      message : "Image uploaded successfully",
+      data : result.secure_url
+    });
+  
+  
+    
+  } catch (error) {
+    console.log("route 97" + error)
+    res.send({
+      success: false,
+      message: error.message,
+    });
+    
+  }
+ } )
+
+
+
 
 module.exports = router;
