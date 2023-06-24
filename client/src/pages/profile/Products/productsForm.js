@@ -154,8 +154,24 @@ function ProductForm({
                     </Form.Item>
                   );
                 })}
-              </div>
+              <Form.Item
+                  label="Show Bids On Product Page"
+                  name="showBidsOnProductPage"
+                  valuePropName="checked"
+              >
+                <Input
+                    type="checkbox"
+                    onChange={(e) => {
+                      formRef.current.setFieldsValue({
+                                                       showBidsOnProductPage: e.target.checked,
+                                                     });
+                    }}
+                    checked={formRef.current?.getFieldValue('showBidsOnProductPage')}
+                />
+              </Form.Item>
+                </div>
             </Form>
+
           </Tabs.TabPane>
 
           <Tabs.TabPane tab="Images" key="2" disabled={!selectedProduct}>
