@@ -64,7 +64,7 @@ router.post('/get-products', async(req,res) => {
         const products = await Product.find(filters).populate('seller').sort({createdAt : -1});
         res.send({
             success : true,
-            products
+            data : products
         });
     }catch(error){
         res.send({
@@ -129,3 +129,19 @@ router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
 })
 
 module.exports = router;
+
+// get product by id
+router.get("/get-product-by-id/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).populate("seller");
+    res.send({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});

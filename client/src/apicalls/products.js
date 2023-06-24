@@ -74,3 +74,14 @@ export const UploadProductImage = async (payload) => {
     return error.message;
   }
 };
+
+export const GetProductById = async(id) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/products/get-product-by-id/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+}
