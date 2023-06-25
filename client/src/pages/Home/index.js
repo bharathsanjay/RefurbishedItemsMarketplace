@@ -111,6 +111,7 @@ import { GetProductsSearch } from "../../apicalls/search";
 
 function Home() {
   const [showFilters, setShowFilters] = React.useState(true);
+  const [showDropdown, setShowDropdown] = React.useState(false);
   const [products, setProducts] = React.useState([]);
   const [searchproducts, setsearchproducts] = React.useState([]);
   const [category,searchCategory] = React.useState('');
@@ -136,23 +137,25 @@ function Home() {
     }
   };
 
-  const getSearchData = async () => {
-    try {
-      const response = await GetProductsSearch();
-      if (response.success) {
-        setsearchproducts(response.data);
-      }
-    } catch (error) {
-      message.error(error.message);
-    }
-  };
+  
 
   useEffect(() => {
     getData();
   }, [filters]);
 
-  useEffect(()=>{getSearchData()},[searchproducts]);
+  
 
+  const handleSearch = async () => {
+    console.log(category);
+    const storeData = await GetProductsSearch({ category: category });
+    console.log("sd" + storeData.data)
+    setsearchproducts(storeData.data);
+    console.log(searchproducts); // Note: This may not reflect the updated state immediately
+    console.log(storeData);
+    setShowDropdown(true)
+  };
+  useEffect(()=>{handleSearch()},[category]);
+  
   return (
     <div className="flex gap-5">
       {showFilters && (
@@ -172,12 +175,38 @@ function Home() {
             ></i>
           )}
           <input
-            type="text"
-            placeholder="Search Products  here..."
+  type="text"
+  placeholder="Search Products here..."
+ 
+  className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
+  value={category}
+  onChange={(e) => {
+    searchCategory(e.target.value);
+     // Call handleSearch on text change
+  }}
+/>
+{console.log("186")}
+{console.log(category)}
+{console.log(showDropdown)}
+{console.log(searchproducts)}
 
-            className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
 
-          />
+<div className="dropdown">
+  
+{category !== "" && showDropdown  && searchproducts.length > 0 && (
+  <div className="dropdown-content">
+    {searchproducts.map((product) => (
+      <div
+        key={product._id}
+        className="dropdown-item"
+        onClick={() => navigate(`/product/${product._id}`)}
+      >
+        {product.name}
+      </div>
+    ))}
+  </div>
+)}
+        </div>
         </div>
         <div
           className={`

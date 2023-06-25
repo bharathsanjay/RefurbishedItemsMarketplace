@@ -1,9 +1,9 @@
 import { axiosInstance } from "./axiosinstance";
 
 
-export const GetProductsSearch = async () => {
+export const GetProductsSearch = async (payload) => {
     try {
-        const response = await axiosInstance.get('api/products/fetch-products');
+        const response = await axiosInstance.post('api/products/fetch-products', payload);
         return response.data;
     } catch (error) {
         return error.message;

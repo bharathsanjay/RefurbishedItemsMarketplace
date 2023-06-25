@@ -25,8 +25,9 @@ router.post('/add-product', authMiddleware, async (req, res) => {
 });
 
 
-router.get("/fetch-products", async (req, res) => {
-  axios.get('https://fakestoreapi.com/products/category/')
+router.post("/fetch-products", async (req, res) => {
+  console.log(req)
+  axios.get(`https://fakestoreapi.com/products/category/${req.body.category}`)
   .then(response => {
     console.log(response.data);
     res.send({success: true,
