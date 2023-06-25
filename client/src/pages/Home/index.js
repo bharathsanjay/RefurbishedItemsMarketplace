@@ -112,6 +112,8 @@ import { GetProductsSearch } from "../../apicalls/search";
 function Home() {
   const [showFilters, setShowFilters] = React.useState(true);
   const [products, setProducts] = React.useState([]);
+  const [searchproducts, setsearchproducts] = React.useState([]);
+  const [category,searchCategory] = React.useState('');
   const [filters, setFilters] = React.useState({
     status: "approved",
     category: [],
@@ -127,7 +129,6 @@ function Home() {
       dispatch(SetLoader(false));
       if (response.success) {
         setProducts(response.data);
-        GetStoreProducts();
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -135,9 +136,22 @@ function Home() {
     }
   };
 
+  const getSearchData = async () => {
+    try {
+      const response = await GetProductsSearch();
+      if (response.success) {
+        setsearchproducts(response.data);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
   useEffect(() => {
     getData();
   }, [filters]);
+
+  useEffect(()=>{getSearchData()},[searchproducts]);
 
   return (
     <div className="flex gap-5">
@@ -160,7 +174,9 @@ function Home() {
           <input
             type="text"
             placeholder="Search Products  here..."
+
             className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
+
           />
         </div>
         <div

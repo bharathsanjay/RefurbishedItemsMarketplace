@@ -3,7 +3,7 @@ const Product = require("../models/productModel");
 const authMiddleware = require('../middlewares/authMiddleware')
 const cloudinary = require("../config/cloudinaryConfig");
 const multer = require("multer");
-const searchUrl ="https://storerestapi.com/products";
+const searchUrl ="https://fakestoreapi.com/products/category/jewelery";
 const axios = require("axios");
 
 
@@ -26,15 +26,11 @@ router.post('/add-product', authMiddleware, async (req, res) => {
 
 
 router.get("/fetch-products", async (req, res) => {
- 
-  axios.get('https://api.storerestapi.com/products')
+  axios.get('https://fakestoreapi.com/products/category/')
   .then(response => {
-    
-    console.log(response.data.data[0]);
-    res.send({
-      success : true,
-      storedata : response.data.data
-    })
+    console.log(response.data);
+    res.send({success: true,
+    data: response.data});
   })
   .catch(error => {
     console.log(error);
