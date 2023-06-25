@@ -174,7 +174,16 @@ function Home() {
               onClick={() => setShowFilters(!showFilters)}
             ></i>
           )}
-          <input
+
+  
+{console.log("186")}
+{console.log(category)}
+{console.log(showDropdown)}
+{console.log(searchproducts)}
+
+
+<div className="dropdown">
+<input
   type="text"
   placeholder="Search Products here..."
  
@@ -185,13 +194,6 @@ function Home() {
      // Call handleSearch on text change
   }}
 />
-{console.log("186")}
-{console.log(category)}
-{console.log(showDropdown)}
-{console.log(searchproducts)}
-
-
-<div className="dropdown">
   
 {category !== "" && showDropdown  && searchproducts.length > 0 && (
   <div className="dropdown-content">
@@ -200,7 +202,7 @@ function Home() {
       <div
         key={product.id}
         className="dropdown-item"
-        onClick={() => navigate(`/product/${product._id}`)}
+        onClick={() => navigate(`/details/${product.id}`)}
       >
         {product.title}
       </div>
