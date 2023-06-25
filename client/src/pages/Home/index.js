@@ -195,13 +195,14 @@ function Home() {
   
 {category !== "" && showDropdown  && searchproducts.length > 0 && (
   <div className="dropdown-content">
+    {console.log(searchproducts)}
     {searchproducts.map((product) => (
       <div
-        key={product._id}
+        key={product.id}
         className="dropdown-item"
         onClick={() => navigate(`/product/${product._id}`)}
       >
-        {product.name}
+        {product.title}
       </div>
     ))}
   </div>
