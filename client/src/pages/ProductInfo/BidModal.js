@@ -3,6 +3,7 @@ import {Form, Input, Modal,message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {PlaceNewBid} from "../../apicalls/products";
 import {SetLoader} from "../../redux/loaderSlice";
+import {AddNotification} from "../../apicalls/notifications";
 
 function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
     const rules = [{ required: true, message: "Required" }];
@@ -21,14 +22,14 @@ function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
         if (response.success) {
             message.success("Bid added successfully");
 
-            // // send notification to seller
-            // await AddNotification({
-            //                           title: "A new bid has been placed",
-            //                           message: `A new bid has been placed on your product ${product.name} by ${user.name} for $ ${values.bidAmount}`,
-            //                           user: product.seller._id,
-            //                           onClick: `/profile`,
-            //                           read: false,
-            //                       });
+            // send notification to seller
+            await AddNotification({
+                                      title: "A new bid has been placed",
+                                      message: `A new bid has been placed on your product ${product.name} by ${user.name} for $ ${values.bidAmount}`,
+                                      user: product.seller._id,
+                                      onClick: `/profile`,
+                                      read: false,
+                                  });
             reloadData();
             setShowBidModal(false);
         } else {
