@@ -3,6 +3,9 @@ const Product = require("../models/productModel");
 const authMiddleware = require('../middlewares/authMiddleware')
 const cloudinary = require("../config/cloudinaryConfig");
 const multer = require("multer");
+const searchUrl ="https://fakestoreapi.com/products/category/jewelery";
+const axios = require("axios");
+
 
 router.post('/add-product', authMiddleware, async (req, res) => {
   try {
@@ -20,6 +23,12 @@ router.post('/add-product', authMiddleware, async (req, res) => {
     });
   }
 });
+
+
+
+
+
+
 
 
 
@@ -157,7 +166,7 @@ router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
 
 })
 
-module.exports = router;
+
 
 // get product by id
 router.get("/get-product-by-id/:id", async (req, res) => {
@@ -174,3 +183,7 @@ router.get("/get-product-by-id/:id", async (req, res) => {
     });
   }
 });
+
+module.exports = router;
+
+

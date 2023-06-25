@@ -100,17 +100,21 @@
 // export default Home;
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GetProducts } from "../../apicalls/products";
+import { GetProducts, GetStoreProducts } from "../../apicalls/products";
 import { SetLoader } from "../../redux/loaderSlice";
 import { message } from "antd";
 import Divider from "../../components/Divider";
 import { useNavigate } from "react-router-dom";
 import Filters from "./Filters";
 import moment from "moment";
+import { GetProductsSearch } from "../../apicalls/search";
 
 function Home() {
   const [showFilters, setShowFilters] = React.useState(true);
+  const [showDropdown, setShowDropdown] = React.useState(false);
   const [products, setProducts] = React.useState([]);
+  const [searchproducts, setsearchproducts] = React.useState([]);
+  const [category,searchCategory] = React.useState('');
   const [filters, setFilters] = React.useState({
     status: "approved",
     category: [],
@@ -133,10 +137,25 @@ function Home() {
     }
   };
 
+  
+
   useEffect(() => {
     getData();
   }, [filters]);
 
+  
+
+  const handleSearch = async () => {
+    console.log(category);
+    const storeData = await GetProductsSearch({ category: category });
+    console.log("sd" + storeData.data)
+    setsearchproducts(storeData.data);
+    console.log(searchproducts); // Note: This may not reflect the updated state immediately
+    console.log(storeData);
+    setShowDropdown(true)
+  };
+  useEffect(()=>{handleSearch()},[category]);
+  
   return (
     <div className="flex gap-5">
       {showFilters && (
@@ -155,11 +174,44 @@ function Home() {
               onClick={() => setShowFilters(!showFilters)}
             ></i>
           )}
-          <input
-            type="text"
-            placeholder="Search Products  here..."
-            className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
-          />
+
+  
+{console.log("186")}
+{console.log(category)}
+{console.log(showDropdown)}
+{console.log(searchproducts)}
+
+
+<div className="dropdown" style={{width: "850px"}}>
+<input
+  type="text"
+  placeholder="Type a category: electronics, jewelery, men's clothing, women's clothing"
+  pattern="electronics|jewelery|men's clothing|women's clothing"
+  title="Valid options: electronics, jewelery, men's clothing, women's clothing"
+  className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
+  value={category}
+  onChange={(e) => {
+    searchCategory(e.target.value);
+     // Call handleSearch on text change
+  }}
+
+/>
+  
+{category !== "" && showDropdown  && searchproducts.length > 0 && (
+  <div className="dropdown-content">
+    {console.log(searchproducts)}
+    {searchproducts.map((product) => (
+      <div
+        key={product.id}
+        className="dropdown-item"
+        onClick={() => navigate(`/search/category/${category}/details/${product.id}`)}
+      >
+        {product.title}
+      </div>
+    ))}
+  </div>
+)}
+        </div>
         </div>
         <div
           className={`
