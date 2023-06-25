@@ -182,17 +182,19 @@ function Home() {
 {console.log(searchproducts)}
 
 
-<div className="dropdown">
+<div className="dropdown" style={{width: "850px"}}>
 <input
   type="text"
-  placeholder="Search Products here..."
- 
+  placeholder="Type a category: electronics, jewelery, men's clothing, women's clothing"
+  pattern="electronics|jewelery|men's clothing|women's clothing"
+  title="Valid options: electronics, jewelery, men's clothing, women's clothing"
   className="border border-gray-300 rounded border-solid px-2 py-1 h-14 w-full"
   value={category}
   onChange={(e) => {
     searchCategory(e.target.value);
      // Call handleSearch on text change
   }}
+
 />
   
 {category !== "" && showDropdown  && searchproducts.length > 0 && (
@@ -202,7 +204,7 @@ function Home() {
       <div
         key={product.id}
         className="dropdown-item"
-        onClick={() => navigate(`/details/${product.id}`)}
+        onClick={() => navigate(`/search/category/${category}/details/${product.id}`)}
       >
         {product.title}
       </div>

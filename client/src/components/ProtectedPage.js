@@ -27,12 +27,14 @@ function ProctectedPage({children}) {
                 dispatch(SetUser(response.data))
                 SetUser(response.data)
             } else {
-                navigate("/login");
+                navigate("/anymHome")
+                // navigate("/login");
                 message.error(response.message);
             }
         } catch (error) {
             dispatch(SetLoader(false))
-            navigate("/login");
+            navigate("/anymHome")
+            // navigate("/login");
             message.error(error.message)
         }
     }
@@ -69,7 +71,8 @@ function ProctectedPage({children}) {
             validateToken();
             getNotifications();
         } else {
-            navigate("/login");
+            navigate("/anymHome")
+            // navigate("/login");
         }
     }, []);
 

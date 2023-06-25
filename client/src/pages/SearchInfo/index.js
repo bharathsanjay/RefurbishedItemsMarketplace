@@ -19,7 +19,6 @@ function SearchInfo() {
     const getData = async () => {
       try {
         dispatch(SetLoader(true));
-        console.log("id" + id)
         const response = await GetFetchById(id);
         dispatch(SetLoader(false));
         if (response.success) {

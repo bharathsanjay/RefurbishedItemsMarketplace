@@ -10,6 +10,8 @@ import Profile from "./pages/profile";
 import Admin from "./pages/Admin";
 import ProductInfo from './pages/ProductInfo';
 import SearchInfo from './pages/SearchInfo';
+import AnonymousHome from "./components/AnonymousHome";
+import ProductInfoay from "./components/ProductInfoay";
 
 function App() {
     const {loading} = useSelector(state => state.loaders);
@@ -20,11 +22,13 @@ function App() {
                 <Routes>
                     <Route path="/" element={<ProtectedPage><Home/></ProtectedPage>}/>
                     <Route path="/product/:id" element={<ProtectedPage><ProductInfo/></ProtectedPage>}/>
-                    <Route path="/details/:id" element={<ProtectedPage><SearchInfo/></ProtectedPage>}/>
+                    <Route path="/product-ay/:id" element={<ProductInfoay/>}/>
+                    <Route path="/search/category/:category/details/:id" element={<ProtectedPage><SearchInfo/></ProtectedPage>}/>
                     <Route path="/profile" element={<ProtectedPage><Profile/></ProtectedPage>}/>
                     <Route path="/admin" element={<ProtectedPage><Admin/></ProtectedPage>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
+                    <Route path="/anymHome" element={<AnonymousHome/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
