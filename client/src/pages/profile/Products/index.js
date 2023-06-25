@@ -5,8 +5,10 @@ import { DeleteProduct, GetProducts } from "../../../apicalls/products";
 import ProductForm from "./productsForm";
 import { SetLoader } from "../../../redux/loaderSlice";
 import moment from 'moment'
+import Bids from "./Bids";
 
 function Products() {
+  const [showBids, setShowBids] = React.useState(false);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
   const [products, setProducts] = React.useState([]);
   const [showProductForm, setShowProductForm] = React.useState(false);
@@ -94,6 +96,16 @@ function Products() {
                 setShowProductForm(true);
               }}
             ></i>
+
+            <span
+                className="underline cursor-pointer"
+                onClick={() => {
+                  setSelectedProduct(record);
+                  setShowBids(true);
+                }}
+            >
+              Show Bids
+            </span>
           </div>
         );
       },
@@ -126,6 +138,13 @@ function Products() {
           selectedProduct={selectedProduct}
           getData={getData}
         />
+      )}
+      {showBids && (
+          <Bids
+              showBidsModal={showBids}
+              setShowBidsModal={setShowBids}
+              selectedProduct={selectedProduct}
+          />
       )}
     </div>
   );
