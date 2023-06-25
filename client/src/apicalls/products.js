@@ -1,5 +1,23 @@
 import { axiosInstance } from "./axiosinstance";
 
+
+
+
+
+export const GetStoreProducts = async (filters) => {
+  try {
+    const response = await axiosInstance.get("/api/products/fetch-products"); // Make a GET request to the new endpoint "/fetch-products"
+    console.log(response.data.storedata)
+    return response.storedata;
+    
+  } catch (error) {
+    return error.message;
+  }
+};
+
+
+
+
 // add a new product
 export const AddProduct = async (payload) => {
   try {

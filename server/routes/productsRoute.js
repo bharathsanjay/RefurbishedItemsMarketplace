@@ -3,6 +3,9 @@ const Product = require("../models/productModel");
 const authMiddleware = require('../middlewares/authMiddleware')
 const cloudinary = require("../config/cloudinaryConfig");
 const multer = require("multer");
+const searchUrl ="https://storerestapi.com/products";
+const axios = require("axios");
+
 
 router.post('/add-product', authMiddleware, async (req, res) => {
   try {
@@ -20,6 +23,28 @@ router.post('/add-product', authMiddleware, async (req, res) => {
     });
   }
 });
+
+
+router.get("/fetch-products", async (req, res) => {
+ 
+  axios.get('https://api.storerestapi.com/products')
+  .then(response => {
+    
+    console.log(response.data.data[0]);
+    res.send({
+      success : true,
+      storedata : response.data.data
+    })
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+    
+});
+
+
+
 
 
 

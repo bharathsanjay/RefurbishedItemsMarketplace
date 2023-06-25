@@ -100,13 +100,14 @@
 // export default Home;
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { GetProducts } from "../../apicalls/products";
+import { GetProducts, GetStoreProducts } from "../../apicalls/products";
 import { SetLoader } from "../../redux/loaderSlice";
 import { message } from "antd";
 import Divider from "../../components/Divider";
 import { useNavigate } from "react-router-dom";
 import Filters from "./Filters";
 import moment from "moment";
+import { GetProductsSearch } from "../../apicalls/search";
 
 function Home() {
   const [showFilters, setShowFilters] = React.useState(true);
@@ -126,6 +127,7 @@ function Home() {
       dispatch(SetLoader(false));
       if (response.success) {
         setProducts(response.data);
+        GetStoreProducts();
       }
     } catch (error) {
       dispatch(SetLoader(false));
